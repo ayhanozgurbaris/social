@@ -1,7 +1,9 @@
 package com.social.social.services;
 
 import com.social.social.entities.Post;
+import com.social.social.entities.User;
 import com.social.social.repos.PostRepository;
+import com.social.social.requests.PostCreateRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -12,9 +14,11 @@ import java.util.Optional;
 @Service
 public class PostService {
    private PostRepository postRepository;
+   private UserService userService;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository,UserService userService) {
         this.postRepository = postRepository;
+        this.userService = userService;
     }
 
     public Post getOnePostById(Long postId) {
@@ -27,7 +31,15 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public Post createOnePost(Post newPost) {
-        return postRepository.save(newPost);
+    public Post createOnePost(PostCreateRequest newPostRequest) {
+        User user = userService.getOneUser(newPostRequest.getUserId());
+        if (user == null)
+            return null;
+        Post toSave = new Post();
+        toSave.setId(newPostRequest.getId());
+        toSave.setText(newPostRequest.getText());
+        toSave.setTitle(newPostRequest.getTitle());
+        toSave.setUser(user);
+        return postRepository.save(toSave);
     }
 }

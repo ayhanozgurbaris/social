@@ -1,5 +1,6 @@
 package com.social.social.controllers;
 import com.social.social.entities.Post;
+import com.social.social.requests.PostCreateRequest;
 import org.springframework.web.bind.annotation.*;
 import com.social.social.services.PostService;
 import java.util.Optional;
@@ -27,8 +28,8 @@ public class PostController {
 
 
   @PostMapping
-  public Post createOnePost(@RequestBody Post newPost) {
-    return postService.createOnePost(newPost);
+  public Post createOnePost(@RequestBody PostCreateRequest newPostRequest) {
+    return postService.createOnePost(newPostRequest);
   }
 
 
